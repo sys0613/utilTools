@@ -8,6 +8,6 @@
 3、将可用的代理IP保存到列表中返回<br>
 4、进行其他爬虫操作时，可以使用列表中的代理IP<br>
 #### 使用方法：<br>
-   （n为从多少页代理ip中进行筛选，每页100个IP）：
-    proxyutil=Proxyutil()
-    available_ip=proxyutil.get_available_iplist(n)
+   （n为从多少页代理ip中进行筛选，每页100个IP）：<br>
+    proxyutil=Proxyutil()<br>
+    available_ip=proxyutil.get_available_iplist(n)<br>
