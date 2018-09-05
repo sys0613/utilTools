@@ -12,7 +12,9 @@ import utiltools.constant as constant
 # http://www.ip168.com/json.do?view=myipaddress
 # nn是高匿，nt是普通透明代理
 class Proxyutil(object):
-    def __init__(self):
+    def __init__(self,page_num,iptype):
+        self.page_num=page_num
+        self.iptype=iptype
         print("构造对象完成")
 
 
@@ -26,7 +28,7 @@ class Proxyutil(object):
                    'Accept-Encoding': 'gzip'}
         return headers
 
-    def scraw_proxies(self,page_num,iptype="HTTP",scraw_url="http://www.xicidaili.com/nn/"):
+    def scraw_proxies(self,scraw_url="http://www.xicidaili.com/nn/"):
         """
         从代理ip网站获取一些免费的代理ip
         :param page_num: 从代理ip网站获取几页的代理ip
@@ -36,7 +38,7 @@ class Proxyutil(object):
         """
         scraw_ip = list()
         all_proxy_list=list()
-        for page in range(1, page_num):
+        for page in range(1, self.page_num):
             print("抓取第%d页代理IP" % page)
             url = scraw_url + str(page)
             r = requests.get(url, headers=self.get_random_header())
@@ -45,7 +47,7 @@ class Proxyutil(object):
             scraw_ip = re.findall(pattern, r.text)
             # 循环爬取回来的所有ip
             for ip in scraw_ip:
-                if (ip[3].upper()==iptype.upper()):
+                if (ip[3].upper()==self.iptype.upper()):
                     all_proxy_list.append(ip)
                     print(ip)
             print("代理爬虫暂停10s")
@@ -62,12 +64,15 @@ class Proxyutil(object):
         :param time_out:超时时间，默认5秒没有连接成功，则放弃该代理ip
         :return:
         """
-        proxies = {'http': ip[0] + ':' + ip[1]}
+        if self.iptype.lower()=='https':
+            test_url='https://ip.cn/'
+        proxies = {self.iptype.lower(): ip[0] + ':' + ip[1]}
         try_ip = ip[0]
         try:
             r = requests.get(test_url, headers=self.get_random_header(), proxies=proxies, timeout=time_out)
             if r.status_code == 200:
-                r.encoding = 'gb2312'
+                if self.iptype.lower() == 'http':
+                    r.encoding = 'gb2312'
                 result = re.search('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', r.text)
                 result = result.group()
                 if result[:9] == try_ip[:9]:
@@ -84,8 +89,8 @@ class Proxyutil(object):
             print('%s:%s 请求过程错误' % (ip[0], ip[1]))
             return False
 
-    def get_available_iplist(self, page_num, iptype="HTTP"):
-        all_proxy_list = proxyutil.scraw_proxies(page_num, iptype)
+    def get_available_iplist(self):
+        all_proxy_list = proxyutil.scraw_proxies()
         available_ip = list(filter(self.check_ip, all_proxy_list))
         print("available_ip :", available_ip)
         return available_ip
@@ -93,8 +98,8 @@ class Proxyutil(object):
 
 
 if __name__ == "__main__":
-    proxyutil=Proxyutil()
+    proxyutil=Proxyutil(2,iptype="HTTPS")
     # 返回的列表格式如：[('115.46.97.161', '8123', '高匿', 'HTTP'),('106.56.102.161', '8070', '高匿', 'HTTP')]
-    available_ip=proxyutil.get_available_iplist(2)
+    available_ip=proxyutil.get_available_iplist()
 
 
