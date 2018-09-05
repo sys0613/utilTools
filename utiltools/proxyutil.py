@@ -3,9 +3,10 @@ import random, requests, time, re
 import utiltools.constant as constant
 '''
 本工具获取可用的代理IP列表
-调用方法（n为从多少页代理ip中进行筛选）：
-    proxyutil=Proxyutil()
-    available_ip=proxyutil.get_available_iplist(n)
+调用方法（n为从多少页代理ip中进行筛选,iptype代表想要获取的代理IP类型，支持HTTP和HTTPS）：
+    proxyutil=Proxyutil(n,iptype="HTTPS")
+    # 返回的列表格式如：[('115.46.97.161', '8123', '高匿', 'HTTP'),('106.56.102.161', '8070', '高匿', 'HTTP')]
+    available_ip=proxyutil.get_available_iplist()
     
 '''
 
