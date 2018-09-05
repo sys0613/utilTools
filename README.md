@@ -8,6 +8,8 @@
 3、将可用的代理IP保存到列表中返回<br>
 4、进行其他爬虫操作时，可以使用列表中的代理IP<br>
 #### 使用方法：<br>
-   （n为从多少页代理ip中进行筛选，每页100个IP）：<br>
-    proxyutil=Proxyutil()<br>
-    available_ip=proxyutil.get_available_iplist(n)<br>
+(n为从多少页代理ip中进行筛选,是一个int型数字,iptype代表想要获取的代理IP类型，支持HTTP和HTTPS)：<br>
+proxyutil=Proxyutil(n,iptype="HTTPS")<br>
+available_ip=proxyutil.get_available_iplist()<br>
+#### 返回的列表格式如：
+[('115.46.97.161', '8123', '高匿', 'HTTP'),('106.56.102.161', '8070', '高匿', 'HTTP')]<br>
